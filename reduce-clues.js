@@ -9,14 +9,13 @@ const reduceClues = ({clues, word}) => {
   }
 }
 
-const getNewClues = (clues, letter) => clues.map(({offset, triplet}) => ({
-  triplet,
-  offset: triplet.includes(letter) ? offset + 1 : offset
-}))
+const getNewClues = (clues, letter) => clues.map(c =>
+  c.includes(letter) ? c.slice(1) : c
+)
 
 const getNextLetter = (clues) => {
-  const firstLetters = clues.map(c => c.triplet[c.offset]).flat()
-  const tails = clues.map(c => c.triplet.slice(c.offset + 1)).flat()
+  const firstLetters = clues.map(c => c[0]).flat()
+  const tails = clues.map(c => c.slice(1)).flat()
   const letter = firstLetters.find(l => l && !tails.includes(l))
   return letter
 }

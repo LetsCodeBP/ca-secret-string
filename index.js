@@ -3,12 +3,11 @@
 const reduceClues = require('./reduce-clues');
 
 const recoverSecret = triplets => {
-  const clues = triplets.map(t => ({offset: 0, triplet: t}))
-  return recurseSecret({clues, word: ''}).word
+  return recurseSecret({clues: triplets, word: ''}).word
 }
 
 const recurseSecret = ({clues, word}) => {
-  return clues.every(c => c.offset === 3) ?
+  return clues.every(c => !c.length) ?
     {clues, word} :
     recurseSecret(reduceClues({clues, word}))
 }
