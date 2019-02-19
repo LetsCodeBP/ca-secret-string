@@ -1,0 +1,47 @@
+#!/bin/bash
+
+COMMAND=$1
+
+MAIN_CONTAINER="node"
+
+FILE_NAME="node-env"
+
+function usage () {
+cat <<- END
+Usage:
+
+./$FILE_NAME [option]
+
+Options
+
+  sh      runs shell in a node-alpine container (default command)
+  node    runs node in a node-alpine container. You can use additional arguments.
+  npm     runs npm in a node-alpine container. You can use additional arguments.
+
+END
+}
+
+function err() {
+  echo $@ >&2
+}
+
+function run_node () {
+  CURRENT_UID=$(id -u):$(id -g) docker-compose run $MAIN_CONTAINER $@
+}
+
+case "$COMMAND" in
+  '')
+    run_node sh
+    ;;
+  'sh'|'node'|'npm')
+    run_node $@
+    ;;
+  'help'|'-h'|'--help')
+    usage
+    ;;
+  *)
+    err "Not supported argument: \"$1\""
+    err "Use \"./$FILE_NAME --help\" for usage information"
+    exit 1
+    ;;
+esac
